@@ -29,6 +29,8 @@ FocusScope {
     property alias searchUrl: addressbar.searchUrl
     readonly property string text: addressbar.text
     property alias bookmarked: addressbar.bookmarked
+
+
     signal closeTabRequested()
     signal toggleBookmark()
     signal toggleDownloads()
@@ -166,7 +168,8 @@ FocusScope {
             fgColor: root.fgColor
 
             focus: true
-
+            isReaderable: tab && tab.isReaderable
+            readerMode: tab && tab.readerMode
             findInPageMode: findInPageMode
             findController: internal.webview ? internal.webview.findController : null
             certificateErrorsMap: internal.webview ? internal.webview.certificateErrorsMap : ({})
@@ -197,11 +200,16 @@ FocusScope {
             }
             onRequestStop: internal.webview.stop()
             onToggleBookmark: root.toggleBookmark()
+            onToggleReaderMode: {
+                tab.toggleReaderMode()
+
+            }
 
             Connections {
                 target: tab
                 onUrlChanged: addressbar.actualUrl = tab.url
             }
+
         }
 
         Row {

@@ -51,6 +51,8 @@ Component {
         property var internal
         property var recentView
         property var tabsModel
+        property bool readerMode: false
+        property bool isReaderable: false
 
         Item {
             id: contextualMenuTarget
@@ -71,6 +73,15 @@ Component {
             focus: true
 
             enabled: current && !bottomEdgeHandle.dragging && !recentView.visible && parent.focus
+            userScripts: [
+                WebEngineScript {
+                    name: "readability"
+                    injectionPoint: WebEngineScript.DocumentReady
+                    sourceUrl: Qt.resolvedUrl("readability.js")
+                    runOnSubframes: true
+                    worldId: WebEngineScript.MainWorld
+                }
+            ]
 
             onNewViewRequested: function(request) {
 
@@ -143,6 +154,12 @@ Component {
                     chrome.findInPageMode = false
                     webviewInternal.titleSet = false
                     webviewInternal.title = title
+                    readerMode = false
+
+                    webviewimpl.runJavaScript("isProbablyReaderable(document)", function(res) {
+                        isReaderable = res
+                        console.log('readerable', res)
+                    });
                 }
 
                 if (webviewimpl.incognito) {
@@ -278,6 +295,16 @@ Component {
                     Component.onDestruction: bottomEdgeHint.forceShow = false
                 }
             }
+        }
+        function toggleReaderMode() {
+            if (browserTab.readerMode) {
+                browserTab.reload()
+                return
+            }
+
+            browser.currentWebview.runJavaScript("makeDomReadable()", function(r) {
+                browserTab.readerMode = true
+            })
         }
     }
 }

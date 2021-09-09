@@ -47,6 +47,9 @@ FocusScope {
     property var findController: null
     property color fgColor: theme.palette.normal.baseText
 
+    property bool isReaderable: false
+    property bool readerMode: false
+    signal toggleReaderMode()
     property var certificateErrorsMap: null
     property bool lastLoadSucceeded
     readonly property bool hasSecurityError: (actualScheme === "https") && (certificateErrorsMap[UrlUtils.extractHost(actualUrl)] !== undefined)
@@ -207,7 +210,32 @@ FocusScope {
 
         secondaryItem: Row {
             height: textField.height
+            id: secondaryIconsRow
+            MouseArea {
+                id: readerToggle
+                objectName: "readerToggle"
 
+                height: parent.height
+                width: visible ? height : 0
+
+                visible: bookmarkToggle.visible && isReaderable
+
+                Icon {
+                    height: parent.height - units.gu(2)
+                    width: height
+                    anchors.centerIn: parent
+
+                    source: "assets/reader_mode.png"
+                    color: readerMode ? theme.palette.normal.focus : addressbar.fgColor
+                }
+
+                onClicked: addressbar.toggleReaderMode()
+
+                Item {
+                    id: readerTogglePlaceHolderItem
+                    anchors.fill: parent
+                }
+            }
             MouseArea {
                 id: bookmarkToggle
                 objectName: "bookmarkToggle"
@@ -273,7 +301,7 @@ FocusScope {
         anchors {
             fill: parent
             leftMargin: icons.width
-            rightMargin: bookmarkToggle.width
+            rightMargin: secondaryIconsRow.width
         }
 
         enabled: !addressbar.activeFocus
