@@ -2401,6 +2401,7 @@ function makeDomReadable() {
                             max-width: 100%; }
                      img { max-width: 100%; height: auto; }
                      a { color: #0060df; }
-                     h1 { font-size: 1.6em }`;
+                     h1 { font-size: 1.6em }
+                     ::-webkit-scrollbar {width: 5px;}::-webkit-scrollbar-track {border-radius: 0px;}::-webkit-scrollbar-thumb {background: rgba(0, 0, 0, 0.4);border-radius: 10px;}::-webkit-scrollbar-thumb:hover {background: rgba(0, 0, 0, 0.6);}";`;
   document.head.appendChild(style);
 }
