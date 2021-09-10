@@ -225,7 +225,7 @@ FocusScope {
                     width: height
                     anchors.centerIn: parent
 
-                    source: "assets/reader_mode.png"
+                    name: "stock_ebook"
                     color: readerMode ? theme.palette.normal.focus : addressbar.fgColor
                 }
 
